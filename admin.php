@@ -1,5 +1,8 @@
 <?php
 
+// 管理ページのログインパスワード
+define( 'PASSWORD', 'adminPassword');
+
 // データベースの接続情報
 define( 'DB_HOST', 'localhost');
 define( 'DB_USER', 'root');
@@ -39,8 +42,11 @@ try {
 
 if( !empty($_POST['btn_submit']) ) {
 
-
-
+	if( !empty($_POST['admin_password']) && $_POST['admin_password'] === PASSWORD ) {
+		$_SESSION['admin_login'] = true;
+	} else {
+		$error_message[] = 'ログインに失敗しました。';
+	}
 }
 
 if( !empty($pdo) ) {
@@ -206,6 +212,7 @@ label {
 }
 
 input[type="text"],
+input[type="password"],
 textarea {
 	margin-bottom: 20px;
 	padding: 10px;
@@ -215,7 +222,8 @@ textarea {
     background: #fff;
 }
 
-input[type="text"] {
+input[type="text"],
+input[type="password"] {
 	width: 200px;
 }
 textarea {
@@ -343,6 +351,18 @@ article.reply::before {
     </ul>
 <?php endif; ?>
 <section>
+
+<?php if( !empty($_SESSION['admin_login']) && $_SESSION['admin_login'] === true ): ?>
+
+<form method="get" action="./download.php">
+    <select name="limit">
+        <option value="">全て</option>
+        <option value="10">10件</option>
+        <option value="30">30件</option>
+    </select>
+    <input type="submit" name="btn_download" value="ダウンロード">
+</form>
+
 <?php if( !empty($message_array) ){ ?>
 <?php foreach( $message_array as $value ){ ?>
 <article>
@@ -354,6 +374,17 @@ article.reply::before {
 </article>
 <?php } ?>
 <?php } ?>
+
+<?php else: ?>
+
+<form method="post">
+    <div>
+        <label for="admin_password">ログインパスワード</label>
+        <input id="admin_password" type="password" name="admin_password" value="">
+    </div>
+    <input type="submit" name="btn_submit" value="ログイン">
+</form>
+<?php endif; ?>
 </section>
 </body>
 </html>
