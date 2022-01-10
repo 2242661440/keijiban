@@ -52,7 +52,7 @@ if( !empty($_POST['btn_submit']) ) {
 if( !empty($pdo) ) {
 
     // メッセージのデータを取得する
-    $sql = "SELECT view_name,message,post_date FROM message ORDER BY post_date DESC";
+    $sql = "SELECT * FROM message ORDER BY post_date DESC";
     $message_array = $pdo->query($sql);
 }
 
@@ -318,11 +318,16 @@ article.reply::before {
 		line-height: 1.6em;
 		font-size: 72%;
 	}
-    article p {
-        color: #555;
-        font-size: 86%;
-        line-height: 1.6em;
-    }
+	.info p {
+		display: inline-block;
+		line-height: 1.6em;
+		font-size: 86%;
+	}
+	article p {
+			color: #555;
+			font-size: 86%;
+			line-height: 1.6em;
+	}
 
 @media only screen and (max-width: 1000px) {
 
@@ -369,6 +374,7 @@ article.reply::before {
     <div class="info">
         <h2><?php echo htmlspecialchars( $value['view_name'], ENT_QUOTES, 'UTF-8'); ?></h2>
         <time><?php echo date('Y年m月d日 H:i', strtotime($value['post_date'])); ?></time>
+        <p><a href="edit.php?message_id=<?php echo $value['id']; ?>">編集</a>  <a href="delete.php?message_id=<?php echo $value['id']; ?>">削除</a></p>
     </div>
     <p><?php echo nl2br( htmlspecialchars( $value['message'], ENT_QUOTES, 'UTF-8') ); ?></p>
 </article>
